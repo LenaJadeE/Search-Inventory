@@ -126,7 +126,35 @@ public class StoreApp {
     private  static void addProduct(ArrayList<Product> inventory, Scanner scanner) {
         try {
             System.out.print("Enter the new product's id: ");
+            int id = Integer.parseInt(scanner.nextLine().trim());
 
+            for (Product product : inventory) {
+                if (product.getId() == id) {
+                    System.out.print("A product with id " + id + " already exists, so nothing was added.");
+                    return;
+                }
+            }
+
+            System.out.print("Enter the product name: ");
+            System name = scanner.nextLine().trim();
+            if (name.isEmpty() || name.contains("|")){
+                System.out.println("The name can't be blank or contain a | character, so nothing was added.");
+                return;
+            }
+
+            System.out.print("Enter the product price: ");
+            double price = Double.parseDouble(scanner.nextLine().trim());
+
+            Product product = new Product(id, name, price);
+            saveProduct(product);
+
+            inventory.add(product);
+            sortByName(inventory);
+            System.out.println("Added " + name + ".");
+        } catch (NumberFormatException e) {
+            System.out.println("That wasn't a valid number, so the product was not added.");
+        } catch (IOException e) {
+            System.out.println("ERROR: Could not read " + InventoryFile + ": " + e.getMessage());
         }
     }
 }
