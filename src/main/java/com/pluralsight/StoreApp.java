@@ -98,7 +98,35 @@ public class StoreApp {
         } catch (NumberFormatException e) {
             System.out.println("That wasn't a valid id. Please enter a whole number.");
         }
+
     }
 
+    private static void findByPriceRange(ArrayList<Product> inventory, Scanner scanner) {
+        try {
+            System.out.print("Enter the minimum price: ");
+            double min = Double.parseDouble(scanner.nextLine().trim());
+            System.out.print("Enter the maximum price: ");
+            double max = Double.parseDouble(scanner.nextLine().trim());
 
+            int matches = 0;
+            for (Product product : inventory) {
+                if (product.getPrice() >= min && product.getPrice() <= max) {
+                    printProduct(product);
+                    matches++;
+                }
+            }
+            if (matches == 0) {
+                System.out.printf("No products between $%.2f and $%.2f.%n", min, max);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("That wasn't a valid price range. Please enter a number such as 9.99.");
+        }
+    }
+
+    private  static void addProduct(ArrayList<Product> inventory, Scanner scanner) {
+        try {
+            System.out.print("Enter the new product's id: ");
+
+        }
+    }
 }
