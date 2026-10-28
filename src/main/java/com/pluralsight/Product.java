@@ -22,11 +22,7 @@ public class Product {
     public double getPrice() {
         return price;
     }
-
-
-
 }
-
 
 // EXERCISE 1
 //  Create a new Java application named search-inventory.
