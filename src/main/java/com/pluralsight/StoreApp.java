@@ -20,7 +20,7 @@ public class StoreApp {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Product> inventory = getInventory();
 
-        running = true;
+        boolean running = true;
         while (running) {
             System.out.println();
             System.out.println("What do you want to do?");
@@ -49,7 +49,7 @@ public class StoreApp {
     public static ArrayList<Product> getInventory() {
         ArrayList<Product> inventory = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(InventoryFile))){
+        try (BufferedReader reader = new BufferedReader(new FileReader(InventoryFile))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.isBlank()) {
@@ -72,8 +72,8 @@ public class StoreApp {
         return inventory;
     }
 
-    private static void  sortByName(ArrayList<Product> inventory) {
-        Collections.sort(inventory, (a,b) -> a.getName().compareToIgnoreCase(b.getName()));
+    private static void sortByName(ArrayList<Product> inventory) {
+        Collections.sort(inventory, (a, b) -> a.getName().compareToIgnoreCase(b.getName()));
     }
 
     private static void listAllProducts(ArrayList<Product> inventory) {
@@ -83,12 +83,12 @@ public class StoreApp {
         }
     }
 
-    private static void  lookupById(ArrayList<Product> inventory, Scanner scanner) {
+    private static void lookupById(ArrayList<Product> inventory, Scanner scanner) {
         System.out.print("Enter product id: ");
         try {
             int id = Integer.parseInt(scanner.nextLine().trim());
 
-            for(Product product : inventory) {
+            for (Product product : inventory) {
                 if (product.getId() == id) {
                     printProduct(product);
                     return;
@@ -123,7 +123,7 @@ public class StoreApp {
         }
     }
 
-    private  static void addProduct(ArrayList<Product> inventory, Scanner scanner) {
+    private static void addProduct(ArrayList<Product> inventory, Scanner scanner) {
         try {
             System.out.print("Enter the new product's id: ");
             int id = Integer.parseInt(scanner.nextLine().trim());
@@ -136,8 +136,8 @@ public class StoreApp {
             }
 
             System.out.print("Enter the product name: ");
-            System name = scanner.nextLine().trim();
-            if (name.isEmpty() || name.contains("|")){
+            String name = scanner.nextLine().trim();
+            if (name.isEmpty() || name.contains("|")) {
                 System.out.println("The name can't be blank or contain a | character, so nothing was added.");
                 return;
             }
@@ -156,5 +156,29 @@ public class StoreApp {
         } catch (IOException e) {
             System.out.println("ERROR: Could not read " + InventoryFile + ": " + e.getMessage());
         }
+    }
+
+    private static void saveProduct(Product product) throws IOException {
+        boolean needsNewline = endsWithoutNewline(Path.of(InventoryFile));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(InventoryFile, true))) {
+            if (needsNewline) {
+                writer.newLine();
+            }
+            writer.write(String.format(Locale.US, "%d|%s|%.2f",
+                    product.getId(), product.getName(), product.getPrice()));
+            writer.newLine();
+        }
+    }
+
+    private static boolean endsWithoutNewline(Path file) throws IOException {
+        if (!Files.exists(file)) {
+            return false;
+        }
+        String text = Files.readString(file);
+        return  ! text.isEmpty() && !text.endsWith("\n");
+    }
+
+    private static void printProduct(Product product) {
+        System.out.printf("id: %d %s - Price: $%.2f%n", product.getId(), product.getName(), product.getPrice());
     }
 }
