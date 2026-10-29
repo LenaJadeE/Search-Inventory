@@ -22,7 +22,6 @@ public class StoreApp {
 
         boolean running = true;
         while (running) {
-            System.out.println();
             System.out.println("What do you want to do?");
             System.out.println("  1- List all products");
             System.out.println("  2- Lookup a product by its id");
